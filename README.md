@@ -1,4 +1,4 @@
-# The Bewise-Quiz API
+# The Bewise Music Saver API
 This app provides API to register users, upload and download wav files.
 
 The app provides functionality as follows:
