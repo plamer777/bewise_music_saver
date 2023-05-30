@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  api:
+    image: plamer88/bewise-music-saver:api-01
+    env_file:
+      - .env
+    ports:
+      - '80:8000'
+    depends_on:
+      db:
+        condition: service_healthy
+      create_db:
+        condition: service_completed_successfully
+    volumes:
+      - ./uploads:/music_saver/uploads
+
+  create_db:
+    image: plamer88/bewise-music-saver:api-01
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+    command: python3 create_db.py
+
+  db:
+    image: postgres:alpine
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    expose:
+      - 5432
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $POSTGRES_USER -d $POSTGRES_DB']
+
+volumes:
+  postgres_data:
